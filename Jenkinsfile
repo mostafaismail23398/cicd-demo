@@ -30,15 +30,17 @@ pipeline {
             }
         }
 
-        stage('🐳 3. Docker Build') {
-            steps {
-                dir('backend') {
-                    echo 'Building Docker Image...'
-                    sh "docker build -t ${DOCKER_REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG} ."
-                    sh "docker build -t ${DOCKER_REGISTRY_USER}/${IMAGE_NAME}:latest ."
-                }
+        tage('🐳 3. Docker Build') {
+    steps {
+        dir('backend') {
+            echo 'Building Docker Image...'
+            // ⚠️ السطر ده بيجبر جينكنز يضيف مسار الـ Docker اللي نزله للـ PATH بتاع الـ shell
+            withEnv(["PATH+DOCKER=${tool name: 'latest', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'}/bin"]) {
+                sh 'docker build -t mostafa/cicd-demo-backend:7 .'
             }
         }
+    }
+}
 
         stage('🚀 4. Docker Push') {
             steps {
