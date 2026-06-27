@@ -4,6 +4,7 @@ pipeline {
     tools {
         // تأكد إن اسم المافن هنا مطابق للاسم المتعرف عليه في الـ Global Tool Configuration جوه جينكنز
         maven 'Maven3' 
+        dockertool "latest"
     }
 
     environment {
