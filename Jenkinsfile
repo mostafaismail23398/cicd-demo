@@ -30,7 +30,7 @@ pipeline {
             }
         }
 
-        tage('🐳 3. Docker Build') {
+        stage('🐳 3. Docker Build') {
     steps {
         dir('backend') {
             echo 'Building Docker Image...'
