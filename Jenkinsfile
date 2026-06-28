@@ -34,26 +34,22 @@ pipeline {
     steps {
         dir('backend') {
             echo 'Building Docker Image...'
-            // ⚠️ السطر ده بيجبر جينكنز يضيف مسار الـ Docker اللي نزله للـ PATH بتاع الـ shell
-            withEnv(["PATH+DOCKER=${tool name: 'latest', type: 'org.jenkinsci.plugins.docker.commons.tools.DockerTool'}/bin"]) {
-                sh 'docker build -t mostafa/cicd-demo-backend:7 .'
-            }
+            sh 'docker build -t mostafa/cicd-demo-backend:7 .'
         }
     }
 }
 
-        stage('🚀 4. Docker Push') {
-            steps {
-                // تأكد إنك ضايف الـ Docker Hub Credentials جوه جينكنز ومسميها بالـ ID ده: docker-hub-credentials
-                withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
-                    echo 'Logging into Docker Hub and Pushing Image...'
-                    sh "echo ${PASS} | docker login -u ${USER} --password-stdin"
-                    sh "docker push ${DOCKER_REGISTRY_USER}/${IMAGE_NAME}:${IMAGE_TAG}"
-                    sh "docker push ${DOCKER_REGISTRY_USER}/${IMAGE_NAME}:latest"
-                }
+stage('🚀 4. Docker Push') {
+    steps {
+        dir('backend') {
+            echo 'Pushing Docker Image...'
+            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', passwordVariable: 'DOCKER_HUB_PASSWORD', usernameVariable: 'DOCKER_HUB_USERNAME')]) {
+                sh "echo \$DOCKER_HUB_PASSWORD | docker login -u \$DOCKER_HUB_USERNAME --password-stdin"
+                sh 'docker push mostafa/cicd-demo-backend:7'
             }
         }
     }
+}
 
     post {
         success {
