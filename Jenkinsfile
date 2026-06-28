@@ -47,12 +47,15 @@ stage('🚀 4. Docker Push') {
         
     }
 
-    post {
+   post {
         success {
-            echo 'Pipeline completed successfully! 🎉'
+            echo 'CI Pipeline completed successfully! Image is ready on Docker Hub. 🎉'
+            
+            // ⚠️ السطر ده بينادي على الـ CD Job أوتوماتيك فوراً بعد نجاح الـ CI
+            build job: 'cicd-demo-cd-pipeline', wait: false
         }
         failure {
-            echo 'Pipeline failed. Check the logs above for debugging. ❌'
+            echo 'CI Pipeline failed. ❌'
         }
     }
 }
