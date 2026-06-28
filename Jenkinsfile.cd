@@ -1,0 +1,35 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('🎯 1. Continuous Deployment (CD)') {
+            steps {
+                echo 'Pulling latest image and deploying to local environment...'
+                
+                // 1. مسح الحاوية القديمة لو موجودة عشان ما تعملش Conflict في البورت
+                sh 'docker rm -f orders-service-prod || true'
+                
+                // 2. سحب أحدث Image من Docker Hub وعمل الـ Deploy
+                sh '''
+                    docker run -d \
+                    --name orders-service-prod \
+                    -p 8085:8080 \
+                    --network cicd-demo_default \
+                    --restart always \
+                    mostafa2303/cicd-demo-backend:7
+                '''
+                
+                echo 'Application deployed successfully on port 8085! 🚀'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'CD Pipeline completed successfully! Container is UP. 🎉'
+        }
+        failure {
+            echo 'CD Pipeline failed. ❌'
+        }
+    }
+}
