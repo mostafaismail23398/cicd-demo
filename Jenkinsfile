@@ -59,4 +59,3 @@ stage('🚀 4. Docker Push') {
             echo 'Pipeline failed. Check the logs above for debugging. ❌'
         }
     }
-}
